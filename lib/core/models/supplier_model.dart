@@ -4,7 +4,7 @@ part 'supplier_model.freezed.dart';
 part 'supplier_model.g.dart';
 
 @freezed
-class SupplierModel with _$SupplierModel {
+abstract class SupplierModel with _$SupplierModel {
   const factory SupplierModel({
     required String id,
     required String name,

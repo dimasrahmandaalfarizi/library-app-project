@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:library_app/core/models/user_model.dart';
 import 'package:library_app/features/auth/data/supabase_auth_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

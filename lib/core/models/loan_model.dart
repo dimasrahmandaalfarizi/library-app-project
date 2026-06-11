@@ -4,7 +4,7 @@ part 'loan_model.freezed.dart';
 part 'loan_model.g.dart';
 
 @freezed
-class LoanModel with _$LoanModel {
+abstract class LoanModel with _$LoanModel {
   const factory LoanModel({
     required String id,
     required String bookId,
