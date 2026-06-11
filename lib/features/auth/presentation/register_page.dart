@@ -1,32 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:library_app/features/auth/presentation/auth_controller.dart';
 import 'package:go_router/go_router.dart';
+import 'package:library_app/features/auth/presentation/auth_controller.dart';
 
-class LoginPage extends ConsumerStatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends ConsumerStatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  ConsumerState<LoginPage> createState() => _LoginPageState();
+  ConsumerState<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage> {
+class _RegisterPageState extends ConsumerState<RegisterPage> {
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  void _login() {
+  void _register() {
     if (_formKey.currentState!.validate()) {
-      ref.read(authControllerProvider.notifier).login(
+      ref.read(authControllerProvider.notifier).register(
         _emailController.text,
         _passwordController.text,
+        _nameController.text,
       );
     }
   }
@@ -35,7 +38,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authControllerProvider);
     
-    // Listen to auth state changes to show errors
     ref.listen(authControllerProvider, (previous, next) {
       next.whenOrNull(
         error: (error, _) {
@@ -45,20 +47,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         },
         data: (user) {
           if (user != null) {
-            // Navigate based on role
-            if (user.role == 'Admin') {
-              context.go('/admin');
-            } else if (user.role == 'Librarian') {
-              context.go('/librarian');
-            } else {
-              context.go('/member');
-            }
+            context.go('/member'); // By default new users are members
           }
         }
       );
     });
 
     return Scaffold(
+      appBar: AppBar(title: const Text('Register')),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
@@ -69,11 +65,20 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Library Login',
+                  'Create an Account',
                   style: Theme.of(context).textTheme.headlineLarge,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 32),
+                TextFormField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Full Name',
+                    prefixIcon: Icon(Icons.person),
+                  ),
+                  validator: (value) => value!.isEmpty ? 'Enter your name' : null,
+                ),
+                const SizedBox(height: 16),
                 TextFormField(
                   controller: _emailController,
                   decoration: const InputDecoration(
@@ -95,17 +100,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
-                  onPressed: authState.isLoading ? null : _login,
+                  onPressed: authState.isLoading ? null : _register,
                   child: authState.isLoading 
                       ? const CircularProgressIndicator(color: Colors.white) 
-                      : const Text('Login'),
+                      : const Text('Register'),
                 ),
                 const SizedBox(height: 16),
                 TextButton(
                   onPressed: () {
-                    context.go('/register');
+                    context.go('/login');
                   },
-                  child: const Text('Create an account'),
+                  child: const Text('Already have an account? Login'),
                 )
               ],
             ),
