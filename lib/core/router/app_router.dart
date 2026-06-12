@@ -5,10 +5,12 @@ import 'package:library_app/features/auth/presentation/splash_screen.dart';
 import 'package:library_app/features/auth/presentation/login_page.dart';
 import 'package:library_app/features/auth/presentation/register_page.dart';
 
+
+
 part 'app_router.g.dart';
 
 @riverpod
-GoRouter appRouter(AppRouterRef ref) {
+GoRouter appRouter(Ref ref) {
   return GoRouter(
     initialLocation: '/',
     routes: [

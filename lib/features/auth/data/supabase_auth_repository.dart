@@ -1,3 +1,4 @@
+
 import 'package:dartz/dartz.dart';
 import 'package:library_app/core/models/user_model.dart';
 import 'package:library_app/features/auth/domain/auth_repository.dart';
@@ -65,6 +66,6 @@ class SupabaseAuthRepository implements AuthRepository {
 }
 
 @riverpod
-AuthRepository authRepository(AuthRepositoryRef ref) {
+AuthRepository authRepository(Ref ref) {
   return SupabaseAuthRepository(ref.watch(supabaseClientProvider));
 }

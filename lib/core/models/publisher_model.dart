@@ -4,7 +4,7 @@ part 'publisher_model.freezed.dart';
 part 'publisher_model.g.dart';
 
 @freezed
-class PublisherModel with _$PublisherModel {
+abstract class PublisherModel with _$PublisherModel {
   const factory PublisherModel({
     required String id,
     required String name,
