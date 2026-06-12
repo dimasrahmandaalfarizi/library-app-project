@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color primary = Color(0xFF004AC6);
+  static const Color primary = Color(0xFF1351D8);
   static const Color onPrimary = Color(0xFFFFFFFF);
   static const Color primaryContainer = Color(0xFF2563EB);
   static const Color onPrimaryContainer = Color(0xFFEEEFFF);
@@ -31,4 +31,12 @@ class AppColors {
   
   static const Color outline = Color(0xFF737686);
   static const Color outlineVariant = Color(0xFFC3C6D7);
+
+  // Auth Specific Colors
+  static const Color authBackground = Color(0xFF121212); // Dark background for auth
+  static const Color authCard = Color(0xFFFFFFFF);
+  static const Color authTextDark = Color(0xFF00215E);
+  static const Color authTextLight = Color(0xFF8A93A6);
+  static const Color authTextFieldFill = Color(0xFFFFFFFF);
+  static const Color authTextFieldBorder = Color(0xFFE2E8F0);
 }
