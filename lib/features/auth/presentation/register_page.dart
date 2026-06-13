@@ -45,6 +45,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
         _emailController.text,
         _passwordController.text,
         _nameController.text,
+        _libraryIdController.text,
       );
     }
   }
@@ -52,12 +53,14 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authControllerProvider);
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     
     ref.listen(authControllerProvider, (previous, next) {
       next.whenOrNull(
         error: (error, _) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(error.toString(), style: const TextStyle(color: Colors.white)), backgroundColor: AppColors.error),
+            SnackBar(content: Text(error.toString(), style: TextStyle(color: colorScheme.onError)), backgroundColor: colorScheme.error),
           );
         },
         data: (user) {
@@ -80,14 +83,13 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.menu_book_rounded, color: AppColors.primary, size: 28),
+                Icon(Icons.menu_book_rounded, color: colorScheme.primary, size: 28),
                 const SizedBox(width: 8),
                 Text(
                   'Libris',
-                  style: GoogleFonts.inter(
-                    fontSize: 24,
+                  style: textTheme.headlineLarge?.copyWith(
                     fontWeight: FontWeight.w800,
-                    color: AppColors.primary,
+                    color: colorScheme.primary,
                     letterSpacing: -0.5,
                   ),
                 ),
@@ -98,10 +100,8 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             // Title
             Text(
               'Create Account',
-              style: GoogleFonts.inter(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: AppColors.authTextDark,
+              style: textTheme.headlineLarge?.copyWith(
+                color: colorScheme.onSurface,
               ),
               textAlign: TextAlign.center,
             ),
@@ -110,10 +110,8 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             // Subtitle
             Text(
               'Join our scholarly community today.',
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: AppColors.authTextLight,
+              style: textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
               ),
               textAlign: TextAlign.center,
             ),
@@ -153,10 +151,9 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
               children: [
                 Text(
                   'Password',
-                  style: GoogleFonts.inter(
-                    fontSize: 13,
+                  style: textTheme.labelLarge?.copyWith(
+                    color: colorScheme.secondary,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.secondary,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -164,30 +161,25 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   controller: _passwordController,
                   obscureText: _obscurePassword,
                   validator: (value) => value!.isEmpty ? 'Enter your password' : null,
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    color: AppColors.authTextDark,
+                  style: textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w500,
+                    color: colorScheme.onSurface,
                   ),
                   decoration: InputDecoration(
                     hintText: '••••••••',
-                    hintStyle: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: AppColors.authTextLight.withOpacity(0.5),
-                      fontWeight: FontWeight.w400,
+                    hintStyle: textTheme.bodyLarge?.copyWith(
+                      color: colorScheme.onSurfaceVariant.withOpacity(0.5),
                       letterSpacing: 2,
                     ),
-                    filled: true,
-                    fillColor: AppColors.authTextFieldFill,
-                    prefixIcon: const Icon(
+                    prefixIcon: Icon(
                       Icons.lock_outline_rounded,
-                      color: AppColors.secondary,
+                      color: colorScheme.secondary,
                       size: 20,
                     ),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                        color: AppColors.authTextLight,
+                        color: colorScheme.onSurfaceVariant,
                         size: 20,
                       ),
                       onPressed: () {
@@ -195,23 +187,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                           _obscurePassword = !_obscurePassword;
                         });
                       },
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: AppColors.authTextFieldBorder),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: AppColors.authTextFieldBorder),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: AppColors.error),
                     ),
                   ),
                 ),
@@ -234,30 +209,28 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                       });
                     },
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                    side: const BorderSide(color: AppColors.authTextFieldBorder, width: 1.5),
-                    activeColor: AppColors.primary,
+                    side: BorderSide(color: colorScheme.outlineVariant, width: 1.5),
+                    activeColor: colorScheme.primary,
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: RichText(
                     text: TextSpan(
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        color: AppColors.secondary,
-                        fontWeight: FontWeight.w400,
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.secondary,
                         height: 1.5,
                       ),
                       children: [
                         const TextSpan(text: 'I agree to the '),
                         TextSpan(
                           text: 'Terms and Conditions',
-                          style: GoogleFonts.inter(color: AppColors.primaryContainer, fontWeight: FontWeight.w600),
+                          style: textTheme.bodyMedium?.copyWith(color: colorScheme.primaryContainer, fontWeight: FontWeight.w600),
                         ),
                         const TextSpan(text: ' and the '),
                         TextSpan(
                           text: 'Privacy Policy.',
-                          style: GoogleFonts.inter(color: AppColors.primaryContainer, fontWeight: FontWeight.w600),
+                          style: textTheme.bodyMedium?.copyWith(color: colorScheme.primaryContainer, fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
@@ -270,29 +243,20 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             // Register Button
             ElevatedButton(
               onPressed: authState.isLoading ? null : _register,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryContainer,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 0,
-              ),
               child: authState.isLoading
-                  ? const SizedBox(
+                  ? SizedBox(
                       height: 24,
                       width: 24,
-                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+                      child: CircularProgressIndicator(color: colorScheme.onPrimary, strokeWidth: 2.5),
                     )
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           'Sign Up',
-                          style: GoogleFonts.inter(
-                            fontSize: 16,
+                          style: textTheme.labelLarge?.copyWith(
                             fontWeight: FontWeight.w700,
+                            color: colorScheme.onPrimary,
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -305,20 +269,19 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             // OR Divider
             Row(
               children: [
-                Expanded(child: Divider(color: AppColors.authTextFieldBorder, thickness: 1)),
+                Expanded(child: Divider(color: colorScheme.outlineVariant, thickness: 1)),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
                     'OR',
-                    style: GoogleFonts.inter(
-                      fontSize: 11,
+                    style: textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w700,
-                      color: AppColors.authTextLight,
+                      color: colorScheme.onSurfaceVariant,
                       letterSpacing: 1.5,
                     ),
                   ),
                 ),
-                Expanded(child: Divider(color: AppColors.authTextFieldBorder, thickness: 1)),
+                Expanded(child: Divider(color: colorScheme.outlineVariant, thickness: 1)),
               ],
             ),
             const SizedBox(height: 24),
@@ -329,20 +292,17 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
               children: [
                 Text(
                   'Already have an account? ',
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    color: AppColors.secondary,
-                    fontWeight: FontWeight.w500,
+                  style: textTheme.labelLarge?.copyWith(
+                    color: colorScheme.secondary,
                   ),
                 ),
                 GestureDetector(
                   onTap: () => context.go('/login'),
                   child: Text(
                     'Sign In',
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
+                    style: textTheme.labelLarge?.copyWith(
                       fontWeight: FontWeight.w700,
-                      color: AppColors.primaryContainer,
+                      color: colorScheme.primaryContainer,
                     ),
                   ),
                 ),

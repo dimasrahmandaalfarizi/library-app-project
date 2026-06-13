@@ -13,66 +13,49 @@ class AuthScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    
     return Scaffold(
-      backgroundColor: AppColors.authBackground,
+      backgroundColor: colorScheme.surface, // Use surface from theme
       body: CustomPaint(
-        painter: DottedBackgroundPainter(),
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
-            child: Container(
-              width: double.infinity,
-              constraints: const BoxConstraints(maxWidth: 400),
-              decoration: BoxDecoration(
-                color: AppColors.authCard,
-                borderRadius: BorderRadius.circular(24),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 40,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
-              ),
-              child: Stack(
-                alignment: Alignment.topCenter,
-                children: [
-                  // Subtle top blue gradient glow
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: 200,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(24),
-                          topRight: Radius.circular(24),
-                        ),
-                        gradient: RadialGradient(
-                          center: Alignment.topCenter,
-                          radius: 1.5,
-                          colors: [
-                            AppColors.primary.withOpacity(0.08),
-                            Colors.transparent,
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  
-                  // Footer Image
-                  if (hasFooterImage)
+        painter: DottedBackgroundPainter(color: colorScheme.primary.withOpacity(0.08)),
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+              child: Container(
+                width: double.infinity,
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    // Subtle top blue gradient glow
                     Positioned(
-                      bottom: 0,
+                      top: 0,
                       left: 0,
                       right: 0,
                       height: 200,
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(24),
-                          bottomRight: Radius.circular(24),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: RadialGradient(
+                            center: Alignment.topCenter,
+                            radius: 1.5,
+                            colors: [
+                              colorScheme.primary.withOpacity(0.08),
+                              Colors.transparent,
+                            ],
+                          ),
                         ),
+                      ),
+                    ),
+                    
+                    // Footer Image
+                    if (hasFooterImage)
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        height: 200,
                         child: ShaderMask(
                           shaderCallback: (rect) {
                             return const LinearGradient(
@@ -90,14 +73,14 @@ class AuthScaffold extends StatelessWidget {
                           ),
                         ),
                       ),
+                    
+                    // Main Content
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: child,
                     ),
-                  
-                  // Main Content
-                  Padding(
-                    padding: const EdgeInsets.all(32.0),
-                    child: child,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -108,10 +91,14 @@ class AuthScaffold extends StatelessWidget {
 }
 
 class DottedBackgroundPainter extends CustomPainter {
+  final Color color;
+
+  DottedBackgroundPainter({required this.color});
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withOpacity(0.05)
+      ..color = color
       ..style = PaintingStyle.fill;
 
     const spacing = 20.0;

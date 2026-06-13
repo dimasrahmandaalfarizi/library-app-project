@@ -10,8 +10,9 @@ abstract class UserModel with _$UserModel {
     required String name,
     required String email,
     required String role,
-    String? avatarUrl,
-    DateTime? createdAt,
+    @JsonKey(name: 'library_id') String? libraryId,
+    @JsonKey(name: 'avatar_url') String? avatarUrl,
+    @JsonKey(name: 'created_at') DateTime? createdAt,
   }) = _UserModel;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);

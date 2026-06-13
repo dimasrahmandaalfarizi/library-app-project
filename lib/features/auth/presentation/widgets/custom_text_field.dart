@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:library_app/core/theme/app_colors.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class CustomTextField extends StatelessWidget {
   final String label;
@@ -26,15 +24,17 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: GoogleFonts.inter(
-            fontSize: 13,
+          style: textTheme.labelLarge?.copyWith(
+            color: colorScheme.secondary,
             fontWeight: FontWeight.w600,
-            color: AppColors.secondary,
           ),
         ),
         const SizedBox(height: 8),
@@ -43,43 +43,21 @@ class CustomTextField extends StatelessWidget {
           obscureText: obscureText,
           validator: validator,
           keyboardType: keyboardType,
-          style: GoogleFonts.inter(
-            fontSize: 14,
-            color: AppColors.authTextDark,
+          style: textTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.w500,
+            color: colorScheme.onSurface,
           ),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: GoogleFonts.inter(
-              fontSize: 14,
-              color: AppColors.authTextLight.withOpacity(0.5),
-              fontWeight: FontWeight.w400,
+            hintStyle: textTheme.bodyLarge?.copyWith(
+              color: colorScheme.onSurfaceVariant.withOpacity(0.5),
             ),
-            filled: true,
-            fillColor: AppColors.authTextFieldFill,
             prefixIcon: Icon(
               prefixIcon,
-              color: AppColors.secondary,
+              color: colorScheme.secondary,
               size: 20,
             ),
             suffixIcon: suffixIcon,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.authTextFieldBorder),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.authTextFieldBorder),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.error),
-            ),
           ),
         ),
       ],

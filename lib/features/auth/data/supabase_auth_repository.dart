@@ -21,13 +21,15 @@ class SupabaseAuthRepository implements AuthRepository {
       
       final userData = await _client.from('users').select().eq('id', response.user!.id).single();
       return Right(UserModel.fromJson(userData));
+    } on AuthException catch (e) {
+      return Left(e.message);
     } catch (e) {
       return Left(e.toString());
     }
   }
 
   @override
-  Future<Either<String, UserModel>> register(String email, String password, String name) async {
+  Future<Either<String, UserModel>> register(String email, String password, String name, String libraryId) async {
     try {
       final response = await _client.auth.signUp(email: email, password: password);
       if (response.user == null) return const Left('Registration failed');
@@ -37,11 +39,14 @@ class SupabaseAuthRepository implements AuthRepository {
         email: email,
         name: name,
         role: 'Member',
+        libraryId: libraryId,
         createdAt: DateTime.now(),
       );
       
       await _client.from('users').insert(userModel.toJson());
       return Right(userModel);
+    } on AuthException catch (e) {
+      return Left(e.message);
     } catch (e) {
       return Left(e.toString());
     }
