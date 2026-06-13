@@ -45,6 +45,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
         _emailController.text,
         _passwordController.text,
         _nameController.text,
+        _libraryIdController.text,
       );
     }
   }
