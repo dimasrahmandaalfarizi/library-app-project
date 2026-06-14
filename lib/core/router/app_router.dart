@@ -4,8 +4,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:library_app/features/auth/presentation/splash_screen.dart';
 import 'package:library_app/features/auth/presentation/login_page.dart';
 import 'package:library_app/features/auth/presentation/register_page.dart';
-
-
+import 'package:library_app/features/dashboard/presentation/admin_dashboard_page.dart';
+import 'package:library_app/features/dashboard/presentation/member_dashboard_page.dart';
+import 'package:library_app/features/books/presentation/book_catalog_page.dart';
 
 part 'app_router.g.dart';
 
@@ -28,7 +29,7 @@ GoRouter appRouter(Ref ref) {
       ),
       GoRoute(
         path: '/admin',
-        builder: (context, state) => const Scaffold(body: Center(child: Text('Admin Dashboard'))),
+        builder: (context, state) => const AdminDashboardPage(),
       ),
       GoRoute(
         path: '/librarian',
@@ -36,7 +37,11 @@ GoRouter appRouter(Ref ref) {
       ),
       GoRoute(
         path: '/member',
-        builder: (context, state) => const Scaffold(body: Center(child: Text('Member Dashboard'))),
+        builder: (context, state) => const MemberDashboardPage(),
+      ),
+      GoRoute(
+        path: '/books',
+        builder: (context, state) => const BookCatalogPage(),
       ),
     ],
   );
