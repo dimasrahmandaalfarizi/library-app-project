@@ -19,6 +19,7 @@ class RegisterPage extends ConsumerStatefulWidget {
 class _RegisterPageState extends ConsumerState<RegisterPage> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _npmController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
@@ -28,6 +29,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
+    _npmController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -41,12 +43,11 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     }
     
     if (_formKey.currentState!.validate()) {
-      final generatedLibraryId = '${DateTime.now().year}${Random().nextInt(9999).toString().padLeft(4, '0')}';
       ref.read(authControllerProvider.notifier).register(
         _emailController.text,
         _passwordController.text,
         _nameController.text,
-        generatedLibraryId,
+        _npmController.text,
       );
     }
   }
@@ -64,11 +65,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             SnackBar(content: Text(error.toString(), style: TextStyle(color: colorScheme.onError)), backgroundColor: colorScheme.error),
           );
         },
-        data: (user) {
-          if (user != null) {
-            context.go('/member'); 
-          }
-        }
       );
     });
 
@@ -136,7 +132,15 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             ),
             const SizedBox(height: 16),
             
-
+            CustomTextField(
+              controller: _npmController,
+              label: 'NPM / Nomor Anggota',
+              prefixIcon: Icons.badge_outlined,
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              validator: (value) => value!.isEmpty ? 'Masukkan NPM Anda' : null,
+            ),
+            const SizedBox(height: 16),
             
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,

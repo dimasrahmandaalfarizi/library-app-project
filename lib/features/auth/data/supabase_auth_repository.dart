@@ -19,7 +19,11 @@ class SupabaseAuthRepository implements AuthRepository {
       final response = await _client.auth.signInWithPassword(email: email, password: password);
       if (response.user == null) return const Left('Login failed');
       
-      final userData = await _client.from('profiles').select('*, roles(nama_role), anggota(npm)').eq('id', response.user!.id).single();
+      final userData = await _client.from('profiles').select('*, roles(nama_role), anggota(npm)').eq('id', response.user!.id).maybeSingle();
+      if (userData == null) {
+        await _client.auth.signOut();
+        return const Left('Profil pengguna tidak ditemukan. Silakan hubungi Admin.');
+      }
       return Right(_mapToUserModel(userData));
     } on AuthException catch (e) {
       return Left(e.message);
@@ -49,7 +53,11 @@ class SupabaseAuthRepository implements AuthRepository {
       });
       
       // Fetch the full data back
-      final userData = await _client.from('profiles').select('*, roles(nama_role), anggota(npm)').eq('id', response.user!.id).single();
+      final userData = await _client.from('profiles').select('*, roles(nama_role), anggota(npm)').eq('id', response.user!.id).maybeSingle();
+      if (userData == null) {
+        await _client.auth.signOut();
+        return const Left('Gagal membuat profil. Silakan hubungi Admin.');
+      }
       return Right(_mapToUserModel(userData));
     } on AuthException catch (e) {
       return Left(e.message);
@@ -68,7 +76,11 @@ class SupabaseAuthRepository implements AuthRepository {
     final user = _client.auth.currentUser;
     if (user == null) return null;
     try {
-      final userData = await _client.from('profiles').select('*, roles(nama_role), anggota(npm)').eq('id', user.id).single();
+      final userData = await _client.from('profiles').select('*, roles(nama_role), anggota(npm)').eq('id', user.id).maybeSingle();
+      if (userData == null) {
+        await _client.auth.signOut();
+        return null;
+      }
       return _mapToUserModel(userData);
     } catch (_) {
       return null;
