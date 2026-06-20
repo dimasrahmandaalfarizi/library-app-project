@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   final String label;
-  final String hint;
+  final String? hint;
   final IconData prefixIcon;
   final Widget? suffixIcon;
   final bool obscureText;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final TextInputType keyboardType;
+  final int? maxLength;
+  final List<TextInputFormatter>? inputFormatters;
 
   const CustomTextField({
     super.key,
     required this.label,
-    required this.hint,
+    this.hint,
     required this.prefixIcon,
     this.suffixIcon,
     this.obscureText = false,
     this.controller,
     this.validator,
     this.keyboardType = TextInputType.text,
+    this.maxLength,
+    this.inputFormatters,
   });
 
   @override
@@ -43,6 +48,8 @@ class CustomTextField extends StatelessWidget {
           obscureText: obscureText,
           validator: validator,
           keyboardType: keyboardType,
+          maxLength: maxLength,
+          inputFormatters: inputFormatters,
           style: textTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.w500,
             color: colorScheme.onSurface,

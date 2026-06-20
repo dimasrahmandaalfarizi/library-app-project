@@ -49,17 +49,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             SnackBar(content: Text(error.toString(), style: TextStyle(color: colorScheme.onError)), backgroundColor: colorScheme.error),
           );
         },
-        data: (user) {
-          if (user != null) {
-            if (user.role == 'Admin') {
-              context.go('/admin');
-            } else if (user.role == 'Librarian') {
-              context.go('/librarian');
-            } else {
-              context.go('/member');
-            }
-          }
-        }
       );
     });
 

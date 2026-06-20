@@ -1,0 +1,113 @@
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
+
+CREATE TABLE public.roles (
+  id bigint NOT NULL DEFAULT nextval('roles_id_seq'::regclass),
+  nama_role character varying NOT NULL UNIQUE,
+  CONSTRAINT roles_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.profiles (
+  id uuid NOT NULL,
+  nama_lengkap character varying NOT NULL,
+  email character varying NOT NULL UNIQUE,
+  role_id bigint,
+  created_at timestamp without time zone DEFAULT now(),
+  updated_at timestamp without time zone DEFAULT now(),
+  CONSTRAINT profiles_pkey PRIMARY KEY (id),
+  CONSTRAINT profiles_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id),
+  CONSTRAINT profiles_role_id_fkey FOREIGN KEY (role_id) REFERENCES public.roles(id)
+);
+CREATE TABLE public.jurusan (
+  id bigint NOT NULL DEFAULT nextval('jurusan_id_seq'::regclass),
+  nama_jurusan character varying NOT NULL,
+  CONSTRAINT jurusan_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.anggota (
+  id bigint NOT NULL DEFAULT nextval('anggota_id_seq'::regclass),
+  profile_id uuid UNIQUE,
+  npm character varying NOT NULL UNIQUE,
+  alamat text,
+  no_telepon character varying,
+  jurusan_id bigint,
+  created_at timestamp without time zone DEFAULT now(),
+  CONSTRAINT anggota_pkey PRIMARY KEY (id),
+  CONSTRAINT anggota_profile_id_fkey FOREIGN KEY (profile_id) REFERENCES public.profiles(id),
+  CONSTRAINT anggota_jurusan_id_fkey FOREIGN KEY (jurusan_id) REFERENCES public.jurusan(id)
+);
+CREATE TABLE public.pegawai (
+  id bigint NOT NULL DEFAULT nextval('pegawai_id_seq'::regclass),
+  profile_id uuid UNIQUE,
+  alamat text,
+  no_telepon character varying,
+  created_at timestamp without time zone DEFAULT now(),
+  CONSTRAINT pegawai_pkey PRIMARY KEY (id),
+  CONSTRAINT pegawai_profile_id_fkey FOREIGN KEY (profile_id) REFERENCES public.profiles(id)
+);
+CREATE TABLE public.kategori (
+  id bigint NOT NULL DEFAULT nextval('kategori_id_seq'::regclass),
+  nama_kategori character varying NOT NULL UNIQUE,
+  CONSTRAINT kategori_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.penerbit (
+  id bigint NOT NULL DEFAULT nextval('penerbit_id_seq'::regclass),
+  nama_penerbit character varying NOT NULL,
+  lokasi_penerbit text,
+  CONSTRAINT penerbit_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.supplier (
+  id bigint NOT NULL DEFAULT nextval('supplier_id_seq'::regclass),
+  nama_supplier character varying NOT NULL,
+  alamat text,
+  telepon character varying,
+  CONSTRAINT supplier_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.buku (
+  id bigint NOT NULL DEFAULT nextval('buku_id_seq'::regclass),
+  isbn character varying UNIQUE,
+  judul character varying NOT NULL,
+  penulis character varying,
+  deskripsi text,
+  jumlah_halaman integer,
+  tahun_terbit integer,
+  stok integer DEFAULT 0,
+  cover_url text,
+  kategori_id bigint,
+  penerbit_id bigint,
+  created_at timestamp without time zone DEFAULT now(),
+  CONSTRAINT buku_pkey PRIMARY KEY (id),
+  CONSTRAINT buku_kategori_id_fkey FOREIGN KEY (kategori_id) REFERENCES public.kategori(id),
+  CONSTRAINT buku_penerbit_id_fkey FOREIGN KEY (penerbit_id) REFERENCES public.penerbit(id)
+);
+CREATE TABLE public.peminjaman (
+  id bigint NOT NULL DEFAULT nextval('peminjaman_id_seq'::regclass),
+  anggota_id bigint,
+  pegawai_id bigint,
+  tanggal_pinjam date NOT NULL,
+  tanggal_jatuh_tempo date NOT NULL,
+  tanggal_kembali date,
+  denda numeric DEFAULT 0,
+  status character varying DEFAULT 'Dipinjam'::character varying,
+  created_at timestamp without time zone DEFAULT now(),
+  CONSTRAINT peminjaman_pkey PRIMARY KEY (id),
+  CONSTRAINT peminjaman_anggota_id_fkey FOREIGN KEY (anggota_id) REFERENCES public.anggota(id),
+  CONSTRAINT peminjaman_pegawai_id_fkey FOREIGN KEY (pegawai_id) REFERENCES public.pegawai(id)
+);
+CREATE TABLE public.detail_peminjaman (
+  id bigint NOT NULL DEFAULT nextval('detail_peminjaman_id_seq'::regclass),
+  peminjaman_id bigint,
+  buku_id bigint,
+  jumlah integer DEFAULT 1,
+  CONSTRAINT detail_peminjaman_pkey PRIMARY KEY (id),
+  CONSTRAINT detail_peminjaman_peminjaman_id_fkey FOREIGN KEY (peminjaman_id) REFERENCES public.peminjaman(id),
+  CONSTRAINT detail_peminjaman_buku_id_fkey FOREIGN KEY (buku_id) REFERENCES public.buku(id)
+);
+CREATE TABLE public.notifikasi (
+  id bigint NOT NULL DEFAULT nextval('notifikasi_id_seq'::regclass),
+  profile_id uuid,
+  judul character varying,
+  pesan text,
+  is_read boolean DEFAULT false,
+  created_at timestamp without time zone DEFAULT now(),
+  CONSTRAINT notifikasi_pkey PRIMARY KEY (id),
+  CONSTRAINT notifikasi_profile_id_fkey FOREIGN KEY (profile_id) REFERENCES public.profiles(id)
+);

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:library_app/features/auth/presentation/auth_controller.dart';
@@ -17,7 +19,7 @@ class RegisterPage extends ConsumerStatefulWidget {
 class _RegisterPageState extends ConsumerState<RegisterPage> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
-  final _libraryIdController = TextEditingController();
+  final _npmController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
@@ -27,7 +29,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
-    _libraryIdController.dispose();
+    _npmController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -45,7 +47,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
         _emailController.text,
         _passwordController.text,
         _nameController.text,
-        _libraryIdController.text,
+        _npmController.text,
       );
     }
   }
@@ -63,11 +65,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             SnackBar(content: Text(error.toString(), style: TextStyle(color: colorScheme.onError)), backgroundColor: colorScheme.error),
           );
         },
-        data: (user) {
-          if (user != null) {
-            context.go('/member'); 
-          }
-        }
       );
     });
 
@@ -121,7 +118,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             CustomTextField(
               controller: _nameController,
               label: 'Full Name',
-              hint: 'Alex Librarian',
               prefixIcon: Icons.person_outline_rounded,
               validator: (value) => value!.isEmpty ? 'Enter your name' : null,
             ),
@@ -130,7 +126,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             CustomTextField(
               controller: _emailController,
               label: 'Email Address',
-              hint: 'alex@library.edu',
               prefixIcon: Icons.mail_outline_rounded,
               keyboardType: TextInputType.emailAddress,
               validator: (value) => value!.isEmpty ? 'Enter your email' : null,
@@ -138,11 +133,12 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             const SizedBox(height: 16),
             
             CustomTextField(
-              controller: _libraryIdController,
-              label: 'Library ID Number',
-              hint: 'LIB-99021-X',
+              controller: _npmController,
+              label: 'NPM / Nomor Anggota',
               prefixIcon: Icons.badge_outlined,
-              validator: (value) => value!.isEmpty ? 'Enter Library ID' : null,
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              validator: (value) => value!.isEmpty ? 'Masukkan NPM Anda' : null,
             ),
             const SizedBox(height: 16),
             
@@ -166,11 +162,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                     color: colorScheme.onSurface,
                   ),
                   decoration: InputDecoration(
-                    hintText: '••••••••',
-                    hintStyle: textTheme.bodyLarge?.copyWith(
-                      color: colorScheme.onSurfaceVariant.withOpacity(0.5),
-                      letterSpacing: 2,
-                    ),
                     prefixIcon: Icon(
                       Icons.lock_outline_rounded,
                       color: colorScheme.secondary,
