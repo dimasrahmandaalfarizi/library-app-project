@@ -1,8 +1,8 @@
-# 📚 Library Management Application
+#  Library Management Application
 
 A complete Android Library Management Application built with Flutter, following **Clean Architecture** principles. This app provides a modern, responsive interface using Material 3 and Google Stitch UI guidelines.
 
-## ✨ Features
+##  Features
 
 - **Role-Based Access Control:** Distinct dashboards and permissions for **Admin**, **Librarian**, and **Member**.
 - **Authentication:** Secure login and registration using Supabase Auth.
@@ -21,7 +21,7 @@ A complete Android Library Management Application built with Flutter, following 
 - **Code Generation:** [Freezed](https://pub.dev/packages/freezed), `json_serializable`
 - **Design System:** Material 3
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 - Flutter SDK
@@ -57,7 +57,7 @@ SUPABASE_ANON_KEY=your_supabase_anon_key_here
 flutter run
 ```
 
-## 🗄️ Database Setup
+##  Database Setup
 
 Ensure your Supabase project has the following tables to support the application:
 - `users` (id, email, name, role, avatar_url, created_at)
@@ -67,7 +67,7 @@ Ensure your Supabase project has the following tables to support the application
 - `suppliers`
 - `loans`
 
-## 🏗️ Project Structure
+##  Project Structure
 
 ```text
 lib/

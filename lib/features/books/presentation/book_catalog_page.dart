@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:library_app/core/theme/app_colors.dart';
 import 'package:go_router/go_router.dart';
+import 'package:library_app/features/books/data/book_repository.dart';
+import 'package:library_app/features/books/domain/book_model.dart';
 
-class BookCatalogPage extends StatefulWidget {
+class BookCatalogPage extends ConsumerStatefulWidget {
   const BookCatalogPage({super.key});
 
   @override
-  State<BookCatalogPage> createState() => _BookCatalogPageState();
+  ConsumerState<BookCatalogPage> createState() => _BookCatalogPageState();
 }
 
-class _BookCatalogPageState extends State<BookCatalogPage> {
+class _BookCatalogPageState extends ConsumerState<BookCatalogPage> {
   int _selectedCategoryIndex = 0;
   final List<String> _categories = ['All', 'Fiction', 'Science', 'History', 'Technology', 'Art'];
 
   @override
   Widget build(BuildContext context) {
+    final booksAsyncValue = ref.watch(booksProvider);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -107,18 +112,28 @@ class _BookCatalogPageState extends State<BookCatalogPage> {
           
           // Books Grid
           Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.all(16.0),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.65,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-              ),
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return _buildCatalogBookCard(index);
+            child: booksAsyncValue.when(
+              data: (books) {
+                if (books.isEmpty) {
+                  return const Center(child: Text('No books available.'));
+                }
+                return GridView.builder(
+                  padding: const EdgeInsets.all(16.0),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.65,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                  ),
+                  itemCount: books.length,
+                  itemBuilder: (context, index) {
+                    final book = books[index];
+                    return _buildCatalogBookCard(book);
+                  },
+                );
               },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stack) => Center(child: Text('Error: $error')),
             ),
           ),
         ],
@@ -126,9 +141,9 @@ class _BookCatalogPageState extends State<BookCatalogPage> {
     );
   }
 
-  Widget _buildCatalogBookCard(int index) {
+  Widget _buildCatalogBookCard(BookModel book) {
     // Alternate availability for demo
-    final isAvailable = index % 3 != 0;
+    final isAvailable = book.stock > 0;
     
     return InkWell(
       onTap: () {
@@ -156,7 +171,7 @@ class _BookCatalogPageState extends State<BookCatalogPage> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Amazing Book Title $index',
+            book.title,
             style: const TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 14,
@@ -166,9 +181,9 @@ class _BookCatalogPageState extends State<BookCatalogPage> {
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 4),
-          const Text(
-            'Author Name',
-            style: TextStyle(
+          Text(
+            book.author ?? 'Unknown Author',
+            style: const TextStyle(
               color: AppColors.onSurfaceVariant,
               fontSize: 12,
             ),

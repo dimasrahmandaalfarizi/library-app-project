@@ -6,6 +6,7 @@ import 'package:library_app/features/auth/presentation/splash_screen.dart';
 import 'package:library_app/features/auth/presentation/login_page.dart';
 import 'package:library_app/features/auth/presentation/register_page.dart';
 import 'package:library_app/features/dashboard/presentation/admin_dashboard_page.dart';
+import 'package:library_app/features/dashboard/presentation/librarian_dashboard_page.dart';
 import 'package:library_app/features/dashboard/presentation/member_dashboard_page.dart';
 import 'package:library_app/features/books/presentation/book_catalog_page.dart';
 
@@ -65,7 +66,7 @@ GoRouter appRouter(Ref ref) {
       ),
       GoRoute(
         path: '/librarian',
-        builder: (context, state) => const Scaffold(body: Center(child: Text('Librarian Dashboard'))),
+        builder: (context, state) => const LibrarianDashboardPage(),
       ),
       GoRoute(
         path: '/member',
